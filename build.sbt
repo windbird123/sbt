@@ -49,7 +49,6 @@ lazy val multi2 = project
   )
 
 // DEPENDENCIES
-
 lazy val dependencies =
   new {
     val logbackV        = "1.2.3"
@@ -59,6 +58,7 @@ lazy val dependencies =
     val scalatestV      = "3.0.5"
     val zioV            = "1.0.0-RC18-2"
 
+    // common dependencies
     val logback        = "ch.qos.logback"             % "logback-classic" % logbackV
     val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"  % scalaLoggingV
     val slf4j          = "org.slf4j"                  % "jcl-over-slf4j"  % slf4jV
@@ -69,6 +69,8 @@ lazy val dependencies =
     val zioTest    = "dev.zio"       %% "zio-test"     % zioV
     val zioTestSbt = "dev.zio"       %% "zio-test-sbt" % zioV
     val scalatest  = "org.scalatest" %% "scalatest"    % scalatestV
+
+    // project specific dependencies
   }
 
 lazy val commonDependencies = Seq(
@@ -76,6 +78,8 @@ lazy val commonDependencies = Seq(
   dependencies.scalaLogging,
   dependencies.slf4j,
   dependencies.typesafeConfig,
+  dependencies.zio,
+  dependencies.zioStreams,
   dependencies.zioTest    % "test",
   dependencies.zioTestSbt % "test",
   dependencies.scalatest  % "test"
@@ -86,13 +90,13 @@ lazy val settings = commonSettings ++ wartremoverSettings ++ scalafmtSettings
 
 lazy val compilerOptions = Seq(
   "-encoding",
-  "UTF-8", // source files are in UTF-8
-  "-deprecation", // warn about use of deprecated APIs
-  "-unchecked", // warn about unchecked type parameters
-  "-feature", // warn about misused language features
+  "UTF-8",                 // source files are in UTF-8
+  "-deprecation",          // warn about use of deprecated APIs
+  "-unchecked",            // warn about unchecked type parameters
+  "-feature",              // warn about misused language features
   "-language:higherKinds", // allow higher kinded types without `import scala.language.higherKinds`
-  "-Xlint", // enable handy linter warnings
-  "-Xfatal-warnings", // turn compiler warnings into errors
+  "-Xlint",                // enable handy linter warnings
+  "-Xfatal-warnings",      // turn compiler warnings into errors
   "-Ypartial-unification", // allow the compiler to unify type constructors of different arities
   "-language:implicitConversions"
 )
