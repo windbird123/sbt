@@ -27,8 +27,8 @@ lazy val multi1 = project
     settings,
     assemblySettings,
     libraryDependencies ++= commonDependencies ++ Seq(
-      dependencies.zio,
-      dependencies.zioStreams
+      dependencies.scalajHttp,
+      dependencies.playJson
     )
   )
   .dependsOn(
@@ -41,7 +41,8 @@ lazy val multi2 = project
     settings,
     assemblySettings,
     libraryDependencies ++= commonDependencies ++ Seq(
-      dependencies.zio
+      dependencies.scalajHttp,
+      dependencies.playJson
     )
   )
   .dependsOn(
@@ -51,12 +52,14 @@ lazy val multi2 = project
 // DEPENDENCIES
 lazy val dependencies =
   new {
-    val logbackV        = "1.2.3"
     val scalaLoggingV   = "3.9.2"
+    val logbackV        = "1.2.3"
     val slf4jV          = "1.7.26"
     val typesafeConfigV = "1.3.2"
-    val scalatestV      = "3.0.5"
+    val scalajHttpV     = "2.4.2"
     val zioV            = "1.0.0-RC18-2"
+    val scalatestV      = "3.0.5"
+    val playJsonV       = "2.6.6"
 
     // common dependencies
     val logback        = "ch.qos.logback"             % "logback-classic" % logbackV
@@ -65,12 +68,13 @@ lazy val dependencies =
     val typesafeConfig = "com.typesafe"               % "config"          % typesafeConfigV
     val zio            = "dev.zio"                    %% "zio"            % zioV
     val zioStreams     = "dev.zio"                    %% "zio-streams"    % zioV
-
-    val zioTest    = "dev.zio"       %% "zio-test"     % zioV
-    val zioTestSbt = "dev.zio"       %% "zio-test-sbt" % zioV
-    val scalatest  = "org.scalatest" %% "scalatest"    % scalatestV
+    val zioTest        = "dev.zio"                    %% "zio-test"       % zioV
+    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % zioV
+    val scalatest      = "org.scalatest"              %% "scalatest"      % scalatestV
 
     // project specific dependencies
+    val scalajHttp = "org.scalaj"        %% "scalaj-http" % scalajHttpV
+    val playJson   = "com.typesafe.play" %% "play-json"   % playJsonV
   }
 
 lazy val commonDependencies = Seq(
@@ -90,13 +94,13 @@ lazy val settings = commonSettings ++ wartremoverSettings ++ scalafmtSettings
 
 lazy val compilerOptions = Seq(
   "-encoding",
-  "UTF-8",                 // source files are in UTF-8
-  "-deprecation",          // warn about use of deprecated APIs
-  "-unchecked",            // warn about unchecked type parameters
-  "-feature",              // warn about misused language features
+  "UTF-8", // source files are in UTF-8
+  "-deprecation", // warn about use of deprecated APIs
+  "-unchecked", // warn about unchecked type parameters
+  "-feature", // warn about misused language features
   "-language:higherKinds", // allow higher kinded types without `import scala.language.higherKinds`
-  "-Xlint",                // enable handy linter warnings
-  "-Xfatal-warnings",      // turn compiler warnings into errors
+  "-Xlint", // enable handy linter warnings
+  "-Xfatal-warnings", // turn compiler warnings into errors
   "-Ypartial-unification", // allow the compiler to unify type constructors of different arities
   "-language:implicitConversions"
 )
