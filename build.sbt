@@ -1,4 +1,5 @@
 name := "sbt"
+version := "1.0.0-SNAPSHOT"
 organization in ThisBuild := "com.github.windbird123"
 scalaVersion in ThisBuild := "2.11.12"
 
@@ -90,16 +91,17 @@ lazy val commonDependencies = Seq(
 )
 
 // SETTINGS
-lazy val settings = commonSettings ++ wartremoverSettings ++ scalafmtSettings
+lazy val settings = commonSettings ++ scalafmtSettings
 
 lazy val compilerOptions = Seq(
   "-encoding",
-  "UTF-8",                 // source files are in UTF-8
-  "-deprecation",          // warn about use of deprecated APIs
-  "-unchecked",            // warn about unchecked type parameters
-  "-feature",              // warn about misused language features
+  "UTF-8", // source files are in UTF-8
+  "-target:jvm-1.8",
+  "-deprecation", // warn about use of deprecated APIs
+  "-unchecked", // warn about unchecked type parameters
+  "-feature", // warn about misused language features
   "-language:higherKinds", // allow higher kinded types without `import scala.language.higherKinds`
-  "-Xfatal-warnings",      // turn compiler warnings into errors
+  "-Xfatal-warnings", // turn compiler warnings into errors
   "-Ypartial-unification", // allow the compiler to unify type constructors of different arities
   "-language:implicitConversions"
 )
@@ -111,10 +113,6 @@ lazy val commonSettings = Seq(
     Resolver.sonatypeRepo("releases"),
     Resolver.sonatypeRepo("snapshots")
   )
-)
-
-lazy val wartremoverSettings = Seq(
-  wartremoverWarnings in (Compile, compile) ++= Warts.allBut(Wart.Throw)
 )
 
 lazy val scalafmtSettings =
