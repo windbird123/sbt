@@ -5,13 +5,10 @@ import org.apache.spark.sql.SparkSession
 import zio._
 
 object ZioSpark extends zio.App with LazyLogging {
-
-  lazy val sparkLayer: ZLayer[Any, Nothing, Has[SparkSession]] = ZLayer.fromManaged {
-    val acquire: UIO[SparkSession] =
-      UIO.effectTotal(SparkSession.builder().master("local").appName("zio spark app").getOrCreate())
-    ZManaged.make(acquire){spark =>
+  lazy val sparkLayer: ZLayer[Any, Throwable, Has[SparkSession]] = ZLayer.fromManaged {
+    ZManaged.makeEffect(SparkSession.builder().master("local").appName("zio spark app").getOrCreate()) { spark =>
       logger.info("spark stopped")
-      UIO.effectTotal(spark.stop())
+      spark.stop()
     }
   }
 
@@ -22,6 +19,7 @@ object ZioSpark extends zio.App with LazyLogging {
       logger.info(s"intRdd: $out ===============")
       out
     }
-    intRDD.provideLayer(sparkLayer)
+
+    intRDD.provideLayer(sparkLayer).orDie
   }
 }
