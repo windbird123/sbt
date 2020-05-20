@@ -20,6 +20,6 @@ object ZioSpark extends zio.App with LazyLogging {
       out
     }
 
-    intRDD.provideLayer(sparkLayer).orDie
+    intRDD.provideCustomLayer(sparkLayer).orDie
   }
 }
