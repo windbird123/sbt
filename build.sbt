@@ -45,12 +45,12 @@ lazy val spark = project
     commonSettings,
     assemblySettings,
     dependencyOverrides ++= Seq(
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5"
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.9"
     ),
     libraryDependencies ++= commonDependencies ++ sparkDependencies ++ Seq(
-      dependencies.scalatest,
       dependencies.scalajHttp,
-      dependencies.playJson
+      dependencies.playJson,
+      dependencies.elasticsearchHadoop
     )
   )
   .dependsOn(
@@ -65,20 +65,22 @@ lazy val dependencies =
     val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.2"
     val slf4j          = "org.slf4j"                  % "jcl-over-slf4j"  % "1.7.26"
     val typesafeConfig = "com.typesafe"               % "config"          % "1.3.2"
-    val zio            = "dev.zio"                    %% "zio"            % "1.0.0-RC18-2"
-    val zioStreams     = "dev.zio"                    %% "zio-streams"    % "1.0.0-RC18-2"
-    val zioTest        = "dev.zio"                    %% "zio-test"       % "1.0.0-RC18-2"
-    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % "1.0.0-RC18-2"
-    val scalatest      = "org.scalatest"              %% "scalatest"      % "3.0.5"
+    val zio            = "dev.zio"                    %% "zio"            % "1.0.0-RC20"
+    val zioStreams     = "dev.zio"                    %% "zio-streams"    % "1.0.0-RC20"
+    val zioTest        = "dev.zio"                    %% "zio-test"       % "1.0.0-RC20" % "test"
+    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % "1.0.0-RC20" % "test"
+    val scalatest      = "org.scalatest"              %% "scalatest"      % "3.0.5" % "test"
 
     // spark
-    val sparkSql         = "org.apache.spark" %% "spark-sql"          % "2.0.2"
-    val sparkStreaming   = "org.apache.spark" %% "spark-streaming"    % "2.0.2"
-    val sparkTestingBase = "com.holdenkarau"  %% "spark-testing-base" % "2.0.2_0.10.0"
+    val sparkSql           = "org.apache.spark"             %% "spark-sql"            % "2.3.2"        % "provided"
+    val sparkStreaming     = "org.apache.spark"             %% "spark-streaming"      % "2.3.2"        % "provided"
+    val sparkTestingBase   = "com.holdenkarau"              %% "spark-testing-base"   % "2.3.2_0.14.0" % "test"
+    val jacksonModuleScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.9"        % "test"
 
     // project specific dependencies
-    val scalajHttp = "org.scalaj"        %% "scalaj-http" % "2.4.2"
-    val playJson   = "com.typesafe.play" %% "play-json"   % "2.6.6"
+    val scalajHttp          = "org.scalaj"        %% "scalaj-http"         % "2.4.2"
+    val playJson            = "com.typesafe.play" %% "play-json"           % "2.6.6"
+    val elasticsearchHadoop = "org.elasticsearch" % "elasticsearch-hadoop" % "7.3.2"
   }
 
 lazy val commonDependencies = Seq(
@@ -88,15 +90,16 @@ lazy val commonDependencies = Seq(
   dependencies.typesafeConfig,
   dependencies.zio,
   dependencies.zioStreams,
-  dependencies.zioTest    % "test",
-  dependencies.zioTestSbt % "test",
-  dependencies.scalatest  % "test"
+  dependencies.zioTest,
+  dependencies.zioTestSbt,
+  dependencies.scalatest
 )
 
 lazy val sparkDependencies = Seq(
-  dependencies.sparkSql         % "provided",
-  dependencies.sparkStreaming   % "provided",
-  dependencies.sparkTestingBase % "test"
+  dependencies.sparkSql,
+  dependencies.sparkStreaming,
+  dependencies.sparkTestingBase,
+  dependencies.jacksonModuleScala
 )
 
 // SETTINGS
