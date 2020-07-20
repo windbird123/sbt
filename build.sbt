@@ -125,7 +125,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val assemblySettings = Seq(
-  assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
+  assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = true),
   assemblyMergeStrategy in assembly := {
     case PathList("META-INF", xs @ _*) => MergeStrategy.discard
     case "application.conf"            => MergeStrategy.concat
