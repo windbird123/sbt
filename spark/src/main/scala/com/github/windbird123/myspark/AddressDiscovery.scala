@@ -35,10 +35,10 @@ object MyApp extends zio.App {
     _        <- ZIO.sleep(5.seconds)
   } yield ()
 
-  override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, Int] = {
+  override def run(args: List[String]): ZIO[zio.ZEnv, Nothing, ExitCode] = {
     val layer = AddressDiscovery.live
     val app   = myapp.provideCustomLayer(layer)
-    app.as(0)
+    app.exitCode
   }
 }
 
