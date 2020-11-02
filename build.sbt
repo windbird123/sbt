@@ -1,3 +1,5 @@
+import microsites._
+
 name := "sbt"
 version := "1.0.0-SNAPSHOT"
 organization in ThisBuild := "com.github.windbird123"
@@ -10,7 +12,7 @@ lazy val root = project
   .disablePlugins(AssemblyPlugin)
   .aggregate(
     common,
-    multi1,
+    docs,
     spark
   )
 
@@ -23,17 +25,19 @@ lazy val common = project
   )
   .disablePlugins(AssemblyPlugin)
 
-lazy val multi1 = project
+lazy val docs = project
   .settings(
-    name := "multi1",
+    name := "docs",
     version := "1.0.0-SNAPSHOT",
     commonSettings,
     assemblySettings,
+    docSettings,
     libraryDependencies ++= commonDependencies ++ Seq(
       dependencies.scalajHttp,
       dependencies.playJson
     )
   )
+    .enablePlugins(MicrositesPlugin)
   .dependsOn(
     common
   )
@@ -139,3 +143,76 @@ addCompilerPlugin("org.spire-math"  %% "kind-projector" % "0.9.3")
 addCompilerPlugin("org.scalamacros" % "paradise"        % "2.1.0" cross CrossVersion.full)
 
 // testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+
+
+
+lazy val docSettings = Seq(
+    micrositeName := "Cats",
+    micrositeDescription := "Lightweight, modular, and extensible library for functional programming",
+    micrositeAuthor := "Cats contributors",
+    micrositeFooterText := Some(
+        """
+          |<p>© 2020 <a href="https://github.com/typelevel/cats#maintainers">The Cats Maintainers</a></p>
+          |<p style="font-size: 80%; margin-top: 10px">Website built with <a href="https://47deg.github.io/sbt-microsites/">sbt-microsites © 2020 47 Degrees</a></p>
+          |""".stripMargin
+    ),
+    micrositeHighlightTheme := "atom-one-light",
+    micrositeHomepage := "http://typelevel.org/cats/",
+    micrositeBaseUrl := "cats",
+    micrositeDocumentationUrl := "/cats/api/cats/index.html",
+    micrositeDocumentationLabelDescription := "API Documentation",
+    micrositeGithubOwner := "typelevel",
+    micrositeExtraMdFilesOutput := resourceManaged.value / "main" / "jekyll",
+    micrositeExtraMdFiles := Map(
+        file("CONTRIBUTING.md") -> ExtraMdFileConfig(
+            "contributing.md",
+            "home",
+            Map("title" -> "Contributing", "section" -> "contributing", "position" -> "50")
+        ),
+        file("README.md") -> ExtraMdFileConfig(
+            "index.md",
+            "home",
+            Map("title" -> "Home", "section" -> "home", "position" -> "0")
+        )
+    ),
+    micrositeGithubRepo := "cats",
+    micrositeTheme := "pattern",
+    micrositePalette := Map(
+        "brand-primary" -> "#5B5988",
+        "brand-secondary" -> "#292E53",
+        "brand-tertiary" -> "#222749",
+        "gray-dark" -> "#49494B",
+        "gray" -> "#7B7B7E",
+        "gray-light" -> "#E5E5E6",
+        "gray-lighter" -> "#F4F3F4",
+        "white-color" -> "#FFFFFF"
+    ),
+    micrositeCompilingDocsTool := WithMdoc,
+    autoAPIMappings := true,
+//    unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(kernel.jvm, core.jvm, free.jvm),
+//    docsMappingsAPIDir := "api",
+//    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
+    ghpagesNoJekyll := false,
+    fork in mdoc := true,
+//    fork in (ScalaUnidoc, unidoc) := true,
+//    scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+//        "-Xfatal-warnings",
+//        "-groups",
+//        "-doc-source-url",
+//        scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
+//        "-sourcepath",
+//        baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+//        "-diagrams"
+//    ) ++ (if (priorTo2_13(scalaVersion.value))
+//        Seq("-Yno-adapted-args")
+//    else
+//        Nil),
+//    scalacOptions ~= (_.filterNot(
+//        Set("-Ywarn-unused-import", "-Ywarn-unused:imports", "-Ywarn-dead-code", "-Xfatal-warnings")
+//    )),
+    git.remoteRepo := "git@github.com:typelevel/cats.git",
+    includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md" | "*.svg",
+    includeFilter in Jekyll := (includeFilter in makeSite).value,
+    mdocIn := baseDirectory.in(LocalRootProject).value / "docs" / "src" / "main" / "mdoc",
+    mdocExtraArguments := Seq("--no-link-hygiene")
+)
