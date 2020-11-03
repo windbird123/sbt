@@ -189,27 +189,21 @@ lazy val docSettings = Seq(
     ),
     micrositeCompilingDocsTool := WithMdoc,
     autoAPIMappings := true,
-//    unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(kernel.jvm, core.jvm, free.jvm),
-//    docsMappingsAPIDir := "api",
-//    addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
     ghpagesNoJekyll := false,
     fork in mdoc := true,
-//    fork in (ScalaUnidoc, unidoc) := true,
-//    scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
-//        "-Xfatal-warnings",
-//        "-groups",
-//        "-doc-source-url",
-//        scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
-//        "-sourcepath",
-//        baseDirectory.in(LocalRootProject).value.getAbsolutePath,
-//        "-diagrams"
-//    ) ++ (if (priorTo2_13(scalaVersion.value))
-//        Seq("-Yno-adapted-args")
-//    else
-//        Nil),
-//    scalacOptions ~= (_.filterNot(
-//        Set("-Ywarn-unused-import", "-Ywarn-unused:imports", "-Ywarn-dead-code", "-Xfatal-warnings")
-//    )),
+    fork in (ScalaUnidoc, unidoc) := true,
+    scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+        "-Xfatal-warnings",
+        "-groups",
+        "-doc-source-url",
+        scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
+        "-sourcepath",
+        baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+        "-diagrams"
+    ) ,
+    scalacOptions ~= (_.filterNot(
+        Set("-Ywarn-unused-import", "-Ywarn-unused:imports", "-Ywarn-dead-code", "-Xfatal-warnings")
+    )),
     git.remoteRepo := "git@github.com:typelevel/cats.git",
     includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md" | "*.svg",
     includeFilter in Jekyll := (includeFilter in makeSite).value,
